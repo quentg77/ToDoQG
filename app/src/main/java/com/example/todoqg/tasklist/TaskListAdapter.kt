@@ -7,13 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todoqg.R
 import kotlinx.android.synthetic.main.item_task.view.*
 
-class TaskListAdapter(private val taskList: List<String>) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
-
-
+class TaskListAdapter(private val taskList: List<Task>) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(taskTitle: String) {
+        fun bind(task: Task) {
             // C'est ici qu'on reliera les données et les listeners une fois l'adapteur implémenté
-            itemView.task_title.text = taskTitle
+            itemView.task_title.text = task.title
+            itemView.task_description.text = task.description
         }
     }
 
