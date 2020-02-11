@@ -1,5 +1,6 @@
 package com.example.todoqg.tasklist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoqg.R
+import com.example.todoqg.task.TaskActivity
 import kotlinx.android.synthetic.main.fragment_task_list.*
 import java.util.*
 
@@ -16,6 +18,8 @@ private val taskList = mutableListOf(
     Task(id = "id_2", title = "Task 2"),
     Task(id = "id_3", title = "Task 3")
 )
+
+const val ADD_TASK_REQUEST_CODE = 123
 
 class TaskListFragment: Fragment() {
     override fun onCreateView(
@@ -40,10 +44,11 @@ class TaskListFragment: Fragment() {
         }
 
         FABAdd.setOnClickListener {
-            taskList.add(Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}"))
-            recycler.adapter?.notifyDataSetChanged()
+//            taskList.add(Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}"))
+//            recycler.adapter?.notifyDataSetChanged()
+
+            val intent = Intent(this.context, TaskActivity::class.java)
+            startActivityForResult(intent, ADD_TASK_REQUEST_CODE)
         }
-
-
     }
 }
