@@ -24,17 +24,26 @@ class TaskListFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_task_list, container, false)
-        val recyclerView: RecyclerView = view.findViewById(R.id.recycler)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.adapter = TaskListAdapter(taskList)
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val recyclerView: RecyclerView = view.findViewById(R.id.recycler)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        val taskListAdapter = TaskListAdapter(taskList)
+        recyclerView.adapter = taskListAdapter
+
+        taskListAdapter.onDeleteClickListener = {task ->
+            taskList.remove(task)
+            recycler.adapter?.notifyDataSetChanged()
+        }
+
         FABAdd.setOnClickListener {
             taskList.add(Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}"))
             recycler.adapter?.notifyDataSetChanged()
         }
+
+
     }
 }
