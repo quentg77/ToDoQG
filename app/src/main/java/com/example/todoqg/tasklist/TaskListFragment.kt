@@ -1,5 +1,6 @@
 package com.example.todoqg.tasklist
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -49,6 +50,14 @@ class TaskListFragment: Fragment() {
 
             val intent = Intent(this.context, TaskActivity::class.java)
             startActivityForResult(intent, ADD_TASK_REQUEST_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == ADD_TASK_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val task = data!!.getSerializableExtra(TaskActivity.TASK_KEY) as Task
+            taskList.add(task)
+            recycler.adapter?.notifyDataSetChanged()
         }
     }
 }
