@@ -21,6 +21,7 @@ private val taskList = mutableListOf(
 )
 
 const val ADD_TASK_REQUEST_CODE = 123
+const val EDIT_TASK_REQUEST_CODE = 124
 
 class TaskListFragment: Fragment() {
     override fun onCreateView(
@@ -51,12 +52,25 @@ class TaskListFragment: Fragment() {
             val intent = Intent(this.context, TaskActivity::class.java)
             startActivityForResult(intent, ADD_TASK_REQUEST_CODE)
         }
+
+        taskListAdapter.onEditClickListener = {task ->
+            val intent = Intent(this.context, TaskActivity::class.java)
+            intent.putExtra("currentTask", task)
+            startActivityForResult(intent, EDIT_TASK_REQUEST_CODE)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ADD_TASK_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val task = data!!.getSerializableExtra(TaskActivity.TASK_KEY) as Task
             taskList.add(task)
+            recycler.adapter?.notifyDataSetChanged()
+        } else if (requestCode == EDIT_TASK_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val updatedTask = data!!.getSerializableExtra(TaskActivity.TASK_KEY) as Task
+//            taskList.replaceAll { t: Task -> if (t.id == updatedTask.id) updatedTask else t}
+            val newTask = taskList.find { task -> task.id == updatedTask.id }
+            newTask?.title = updatedTask.title
+            newTask?.description = updatedTask.description
             recycler.adapter?.notifyDataSetChanged()
         }
     }
