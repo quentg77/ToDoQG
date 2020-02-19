@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.item_task.view.*
 class TaskListAdapter(private val taskList: List<Task>) : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
     var onDeleteClickListener: (Task) -> Unit = {}
     var onEditClickListener: (Task) -> Unit = {}
+    var onLayoutLongClickListener: (Task) -> Unit = {}
 
     inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(task: Task) {
@@ -23,6 +24,11 @@ class TaskListAdapter(private val taskList: List<Task>) : RecyclerView.Adapter<T
 
             itemView.task_edit.setOnClickListener {
                 onEditClickListener.invoke(task)
+            }
+
+            itemView.task_layout.setOnLongClickListener {
+                onLayoutLongClickListener.invoke(task)
+                true
             }
         }
     }

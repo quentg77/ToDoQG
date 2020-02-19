@@ -1,6 +1,7 @@
 package com.example.todoqg.task
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
@@ -25,11 +26,21 @@ class TaskActivity : AppCompatActivity() {
 
         val extras = intent.extras
         extras?.let { it ->
-            val currentTask = it.get("currentTask") as Task
-            editTextTitle.setText(currentTask.title)
-            editTextDescription.setText(currentTask.description)
-            currentId = currentTask.id
+            val currentTask = it.get("currentTask") as Task?
+            currentTask?.let {
+                editTextTitle.setText(currentTask.title)
+                editTextDescription.setText(currentTask.description)
+                currentId = currentTask.id
+            }
         }
+
+//        when {
+//            intent?.action == Intent.ACTION_SEND -> {
+//                if ("text/plain" == intent.type) {
+//                    handleSendText(intent)
+//                }
+//            }
+//        }
 
         btnValidate.setOnClickListener {
             val taskTitle = findViewById<EditText>(R.id.editTextTitle).text.toString()
@@ -47,4 +58,12 @@ class TaskActivity : AppCompatActivity() {
             }
         }
     }
+
+//    private fun handleSendText(intent: Intent) {
+//        val test = intent.getStringExtra(Intent.EXTRA_TEXT)
+//
+//        if (!test.isNullOrBlank()) {
+//            editTextTitle.setText(test)
+//        }
+//    }
 }

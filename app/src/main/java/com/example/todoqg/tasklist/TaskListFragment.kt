@@ -41,6 +41,23 @@ class TaskListFragment : Fragment() {
 //            }
 //        }
 
+        val intent = activity!!.intent
+
+        when {
+            intent.action == Intent.ACTION_SEND -> {
+                if ("text/plain" == intent.type) {
+                    val description = intent.getStringExtra(Intent.EXTRA_TEXT)
+
+                    if (!description.isNullOrBlank()) {
+                        val intentTaskActivity = Intent(this.context, TaskActivity::class.java)
+                        val task = Task(id = UUID.randomUUID().toString(), title = "", description = description)
+                        intentTaskActivity.putExtra("currentTask", task)
+                        startActivityForResult(intentTaskActivity, ADD_TASK_REQUEST_CODE)
+                    }
+                }
+            }
+        }
+
         savedInstanceState?.let {
             val taskParcelable: ArrayList<Task>? = it.getParcelableArrayList("list")
 
@@ -72,6 +89,17 @@ class TaskListFragment : Fragment() {
             val intent = Intent(this.context, TaskActivity::class.java)
             intent.putExtra("currentTask", task)
             startActivityForResult(intent, EDIT_TASK_REQUEST_CODE)
+        }
+
+        taskListAdapter.onLayoutLongClickListener = {task ->
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, task.description)
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
     }
 
