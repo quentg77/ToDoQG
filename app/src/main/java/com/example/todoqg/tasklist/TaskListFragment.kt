@@ -11,8 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoqg.R
+import com.example.todoqg.network.Api
 import com.example.todoqg.task.TaskActivity
 import kotlinx.android.synthetic.main.fragment_task_list.*
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,6 +30,8 @@ class TaskListFragment : Fragment() {
         Task(id = "id_2", title = "Task 2"),
         Task(id = "id_3", title = "Task 3")
     )
+
+    private val coroutineScope = MainScope()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,6 +72,14 @@ class TaskListFragment : Fragment() {
         }
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        coroutineScope.launch {
+            val userInfo = Api.userService.getInfo().body()!!
+            textView_profil.setText("${userInfo.firstName} ${userInfo.lastName}")
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
